@@ -31,6 +31,10 @@ swapran-update-w42:
 
 swapran-update-w43:
 	helm upgrade oai-cu ./charts/oai-5g-ran-swapran/oai-cu -f ./charts/oai-5g-ran-swapran/oai-cu/values-2024.w43.yaml
+
+remove_ran:
+	helm uninstall oai-cu --ignore-not-found
+	helm uninstall oai-du --ignore-not-found
 	
 cleanup:
 	helm uninstall oai-5g-basic --ignore-not-found
