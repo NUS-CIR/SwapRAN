@@ -1,0 +1,94 @@
+diff --git a/fhi_lib/lib/src/xran_common.c b/fhi_lib/lib/src/xran_common.c
+index 5968d01..8adf0e4 100644
+--- a/fhi_lib/lib/src/xran_common.c
++++ b/fhi_lib/lib/src/xran_common.c
+@@ -52,7 +52,8 @@
+ #include "xran_printf.h"
+ #include "xran_mlog_lnx.h"
+ 
+-static struct timespec sleeptime = {.tv_nsec = 1E3 }; /* 1 us */
++// SwapRAN patch
++static struct timespec sleeptime = {.tv_nsec = 2E3 };
+ 
+ extern int32_t first_call;
+ 
+diff --git a/fhi_lib/lib/src/xran_main.c b/fhi_lib/lib/src/xran_main.c
+index 216c7f5..784152a 100644
+--- a/fhi_lib/lib/src/xran_main.c
++++ b/fhi_lib/lib/src/xran_main.c
+@@ -490,6 +490,18 @@ tti_ota_cb(struct rte_timer *tim, void *arg)
+ 
+     MLogTask(PID_TTI_TIMER, t1, MLogTick());
+ 
++    // SwapRAN patch
++    static int s_first_call = 0;
++    if (s_first_call == 0) {
++        struct timespec ts;
++        clock_gettime(CLOCK_REALTIME, &ts);
++        const uint32_t usecs = ts.tv_nsec / 1000;
++        for(int i=0; i<XRAN_PORTS_NUM; i++) {
++            xran_lib_ota_tti[i] = ((usecs / 500) + 1) - 1;  // set good initial values by pretending to be the previous TTI
++        }
++    }
++    s_first_call = 1;
++
+     if(p_xran_dev_ctx->xran_port_id == 0){
+     /* To match TTbox */
+         if(xran_lib_ota_tti[0] == 0)
+@@ -1425,7 +1437,12 @@ tti_to_phy_cb(struct rte_timer *tim, void *arg)
+             uint32_t slot_id     = XranGetSlotNum(tti, SLOTNUM_PER_SUBFRAME(interval));
+             uint32_t subframe_id = XranGetSubFrameNum(tti,SLOTNUM_PER_SUBFRAME(interval),  SUBFRAMES_PER_SYSTEMFRAME);
+             uint32_t frame_id = XranGetFrameNum(tti,xran_getSfnSecStart(),SUBFRAMES_PER_SYSTEMFRAME, SLOTNUM_PER_SUBFRAME(interval));
+-            if((frame_id == xran_max_frame)&&(subframe_id==9)&&(slot_id == SLOTNUM_PER_SUBFRAME(interval)-1)) {  //(tti == xran_fs_get_max_slot()-1)
++            // SwapRAN patch
++            // if((frame_id == xran_max_frame)&&(subframe_id==9)&&(slot_id == SLOTNUM_PER_SUBFRAME(interval)-1)) {  //(tti == xran_fs_get_max_slot()-1)
++            if((subframe_id==9)&&(slot_id == SLOTNUM_PER_SUBFRAME(interval)-1)) {
++                struct timespec ts;
++                clock_gettime(CLOCK_REALTIME, &ts);
++                printf("--------%zu.%03zu: Anuj: xran_main.c: %s frame_id = %u, sfId = %u. SETTING first_call-----------\n", ts.tv_sec, ts.tv_nsec / 1000000, __FUNCTION__, frame_id, subframe_id);
+                 first_call = 1;
+             }
+         }
+diff --git a/fhi_lib/lib/src/xran_timer.c b/fhi_lib/lib/src/xran_timer.c
+index 55182d8..0a71caf 100644
+--- a/fhi_lib/lib/src/xran_timer.c
++++ b/fhi_lib/lib/src/xran_timer.c
+@@ -62,7 +62,8 @@ static struct timespec* p_last_time = &last_time;
+ 
+ static struct timespec* p_temp_time;
+ 
+-static struct timespec sleeptime = {.tv_nsec = 1E3 }; /* 1 us */
++// SwapRAN patch
++static struct timespec sleeptime = {.tv_nsec = 2E3 };  
+ 
+ volatile static unsigned long current_second = 0;
+ static unsigned long started_second = 0;
+@@ -194,11 +195,28 @@ long poll_next_tick(long interval_ns, unsigned long *used_tick)
+     int i;
+ 
+     if(counter == 0) {
++        // SwapRAN patch
++        while(true) {
++            struct timespec ts;
++            clock_gettime(CLOCK_REALTIME, &ts);
++            const uint32_t usecs = ts.tv_nsec / 1000;
++            if(usecs % 1000 == 0) {
++                sym_cnt = 0;
++                sym_acc = (usecs / 500) * 14 * (fine_tuning[1][0] + fine_tuning[1][1]) / 2;
++                printf("---------%zu.%06zu: Anuj: xran_timer.c hack ENTERED in poll_next_tick(), initializing sym counter = %u, sym_acc = %u\n",
++    +                    ts.tv_sec, ts.tv_nsec / 1000, (usecs / 500) * 14, sym_acc);
++                xran_lib_ota_sym[0] = 0;
++                xran_lib_ota_sym_idx[0] = (usecs / 500) * 14;
++                break;
++            }
++        }
+        clock_gettime(CLOCK_REALTIME, p_last_time);
+        last_tick = MLogTick();
+        if(unlikely(p_xran_dev_ctx->offset_sec || p_xran_dev_ctx->offset_nsec))
+            timing_adjust_gps_second(p_last_time);
+        current_second = p_last_time->tv_sec;
++       // SwapRAN patch 
++       xran_updateSfnSecStart();    
+        counter = 1;
+     }
+ 
