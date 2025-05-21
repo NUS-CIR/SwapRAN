@@ -105,3 +105,10 @@ Repeat with `w42` and `w43` (technically, you can also perform a downgrade).
 ## Demo Video Links
 
 - [OAI Summer Workshop 2025](https://youtu.be/7xD2kYkpmOM) 
+
+## Limitations
+
+Known limitations:
+- The F1AP proxy currently only supports 1 DU per instance. 
+Multi-DU support will come later. 
+To support multi-DU setups, the current approach is to use multiple F1AP proxy instances for each DU.
