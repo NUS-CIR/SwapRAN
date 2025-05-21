@@ -120,7 +120,7 @@ In our OAI 7.2x setup, we have been observing downtimes to be around 3-5 seconds
 
 ## Demo Video Links
 
-Coming soon.
+- [OAI Summer Workshop 2025](https://youtu.be/EKVyJjPpaG8) 
 
 ## Limitations
 

@@ -104,4 +104,4 @@ Repeat with `w42` and `w43` (technically, you can also perform a downgrade).
 
 ## Demo Video Links
 
-Coming soon.
+- [OAI Summer Workshop 2025](https://youtu.be/7xD2kYkpmOM) 
