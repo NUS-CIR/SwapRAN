@@ -1,12 +1,12 @@
 # Helm Chart for OAI Distributed Unit (OAI-DU)
 
-This helm-chart is only tested for [RF Simulated oai-du](https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/radio/rfsimulator/README.md). Though it is designed to work with split 8 radio units or USRPs. In `template/deployment.yaml` there is a section to use it with USB based USRPs. The option to use RFSIM, USRPs or Radio Units is decided via configuration file. The container image always remains the same. 
+This helm-chart is only tested for [RF Simulated oai-du](https://gitlab.eurecom.fr/oai/openairinterface5g/-/blob/develop/radio/rfsimulator/README.md). 
 
-We are in the process of testing the helm-chart with different USRPs, Radio Units and extend it for O-RAN 7.2 interface. We have already implemented 7.2 interface in OAI codebase.
+Though it is designed to work with split 8 radio units or USRPs. In `template/deployment.yaml` there is a section to use it with USB based USRPs. The option to use RFSIM, USRPs or Radio Units is decided via configuration file. The container image always remains the same. 
 
 Before using this helm-chart we recommend you read about OAI codebase and its working from the documents listed on [OAI gitlab](https://gitlab.eurecom.fr/oai/openairinterface5g/-/tree/develop/doc)
 
-**Note**: This chart is tested on [Minikube](https://minikube.sigs.k8s.io/docs/) and [Red Hat Openshift](https://www.redhat.com/fr/technologies/cloud-computing/openshift) 4.10 and 4.12. RFSIM requires minimum 2CPU and 2Gi RAM. 
+**Note**: This chart is tested on [Minikube](https://minikube.sigs.k8s.io/docs/) and [Red Hat Openshift](https://www.redhat.com/fr/technologies/cloud-computing/openshift) 4.10-4.16. RFSIM requires minimum 2CPU and 2Gi RAM. 
 
 ## Introduction
 
@@ -17,7 +17,7 @@ The [codebase](https://gitlab.eurecom.fr/oai/openairinterface5g/-/tree/develop) 
 1. `oaisoftwarealliance/oai-gnb` for monolithic gNB, DU, CU, CU-CP 
 2. `oaisoftwarealliance/oai-nr-cuup` for CU-UP. 
 
-Each image has develop tag and a dedicated week tag for example `2023.w18`. We only publish Ubuntu 18.04/20.04 images. We do not publish RedHat/UBI images. These images you have to build from the source code on your RedHat systems or Openshift Platform. You can follow this [tutorial](../../../openshift/README.md) for that.
+Each image has develop tag and a dedicated week tag for example `2024.w32`. We only publish Ubuntu 22.04 images. We do not publish RedHat/UBI images. These images you have to build from the source code on your RedHat systems or Openshift Platform. You can follow this [tutorial](../../../openshift/README.md) for that.
 
 The helm chart of OAI-DU creates multiples Kubernetes resources,
 
@@ -26,7 +26,7 @@ The helm chart of OAI-DU creates multiples Kubernetes resources,
 3. Deployment
 4. Configmap
 5. Service account
-6. Network-attachment-defination (Optional only when multus is used)
+6. Network-attachment-definition (Optional only when multus is used)
 
 The directory structure
 
@@ -49,11 +49,9 @@ The directory structure
 
 [Values.yaml](./values.yaml) contains all the configurable parameters. Below table defines the configurable parameters. You need a dedicated interface for Fronthaul.
 
-
-
 |Parameter                       |Allowed Values                 |Remark                           |
 |--------------------------------|-------------------------------|---------------------------------|
-|kubernetesType                  |Vanilla/Openshift              |Vanilla Kubernetes or Openshift  |
+|kubernetesDistribution                  |Vanilla/Openshift              |Vanilla Kubernetes or Openshift  |
 |nfimage.repository              |Image Name                     |                                 |
 |nfimage.version                 |Image tag                      |                                 |
 |nfimage.pullPolicy              |IfNotPresent or Never or Always|                                 |
@@ -65,20 +63,20 @@ The directory structure
 |podSecurityContext.runAsGroup   |Integer (0,65534)              |                                 |
 |multus.defaultGateway           |Ip-Address                     |default route in the pod         |
 |multus.f1Interface.create       |true/false                     |                                 |
-|multus.f1Interface.IPadd        |Ip-Address                     |                                 |
-|multus.f1Interface.Netmask      |Netmask                        |                                 |
-|multus.f1Interface.Gateway      |Ip-Address                     |                                 |
+|multus.f1Interface.ipAdd        |Ip-Address                     |                                 |
+|multus.f1Interface.netmask      |netmask                        |                                 |
+|multus.f1Interface.gateway      |Ip-Address                     |                                 |
 |multus.f1Interface.routes       |Json                           |Routes you want to add in the pod|
 |multus.f1Interface.hostInterface|host interface                 |Host machine interface name      |
 |multus.ruInterface.create       |true/false                     |                                 |
-|multus.ruInterface.IPadd        |Ip-Address                     |                                 |
-|multus.ruInterface.Netmask      |Netmask                        |                                 |
-|multus.ruInterface.Gateway      |Ip-Address                     |                                 |
+|multus.ruInterface.ipAdd        |Ip-Address                     |                                 |
+|multus.ruInterface.netmask      |netmask                        |                                 |
+|multus.ruInterface.gateway      |Ip-Address                     |                                 |
 |multus.ruInterface.hostInterface|host interface                 |Host machine interface name      |
 |multus.ruInterface.mtu          |Integer                        ||Range [0, Parent interface MTU] |
 
 
-The config parameters mentioned in `config` block of `values.yaml` are limited on purpose to maintain simplicity. They do not allow changing a lot of parameters of oai-gnb. If you want to use your own configuration file for oai-gnb-du. It is recommended to copy it in `templates/configmap.yaml` and set `config.mountConfig` as `true`. The command line for gnb is provided in `config.useAdditionalOptions`.
+The config parameters mentioned in `config` block of `values.yaml` are limited on purpose to maintain simplicity. They do not allow changing a lot of parameters for oai-du. If you want to use your own configuration file for oai-du. It is recommended to copy it in `templates/configmap.yaml`. The command line for gnb is provided in `config.useAdditionalOptions`.
 
 **NOTE**: The charts are configured to be used with primary CNI of Kubernetes. When you will mount the configuration file you have to define static ip-addresses for F1 and RU. Most of the primary CNIs do not allow static ip-address allocation. To overcome this we are using multus-cni with static ip-address allocation. If you are using DU in RF simulated mode then you need minimum one multus interface which you can use for F1 and RU. If you want to use DU with hardware RU then you need a dedicated interface for Fronthaul.
 

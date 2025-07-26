@@ -1,5 +1,5 @@
 ---
-{{- if eq .Values.kubernetesType "Openshift" }}
+{{- if eq .Values.kubernetesDistribution "Openshift" }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
