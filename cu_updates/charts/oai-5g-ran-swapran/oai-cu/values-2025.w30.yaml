@@ -4,7 +4,7 @@ kubernetesType: Vanilla  #Vanilla for community kubernetes distribution else Ope
 ## To know more about them follow this tutorial https://gitlab.eurecom.fr/oai/cn5g/oai-cn5g-fed/-/tree/master/openshift
 nfimage:   # image name either locally present or in a public/private repository
   repository: docker.io/oaisoftwarealliance/oai-gnb           ## dockerhub oaisoftwarealliance/oai-gnb  
-  version: 2024.w41 # image tag or develop
+  version: 2025.w29 # image tag or develop
   pullPolicy: IfNotPresent
 
 ## good to use when pulling images from docker-hub mention 
@@ -68,12 +68,12 @@ config:
   useAdditionalOptions: "--sa --log_config.global_log_options level,nocolor,time"
   # If mounting the configuration file then below parameters are not used
   cuName: "oai-cu"
-  gnbId: "0xe1"   
+  gnbId: "0xe0" 
   mcc: "001"   # check the information with AMF, SMF, UPF
   mnc: "01"    # check the information with AMF, SMF, UPF
   tac: "1"     # check the information with AMF
   sst: "1"  #currently only 4 standard values are allowed 1,2,3,4
-  amfhost: "oai-amf"  # amf ip-address or service-name oai-amf-svc or 172.21.6.94
+  amfhost: "172.22.0.10"  # amf ip-address or service-name oai-amf-svc or 172.21.6.94
   n2IfName: "eth0"    # if multus.n2Interface.create is true then use n2
   n3IfName: "eth0"   #if multus.n3Interface.create is true then use n3 or you can only use 1 interface n2 or eth0 
   f1IfName: "eth0"   #if multus.f1Interface.create is true then use multus.f1Interface.Ipadd

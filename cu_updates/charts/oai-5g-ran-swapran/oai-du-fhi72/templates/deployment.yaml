@@ -20,16 +20,19 @@ spec:
       annotations:
         k8s.v1.cni.cncf.io/networks: >-
           [{
-                 "name": "{{ .Chart.Name }}-f1",
-                 "interface": "f1"
+                 "name": "{{ .Chart.Name }}-{{ .Values.multus.f1Interface.name }}",
+                 "interface": "{{ .Values.multus.f1Interface.name }}"
                 {{- if .Values.multus.defaultGateway }}
                  ,"default-route": ["{{ .Values.multus.defaultGateway }}"]
+                {{- end }}
+                {{- if .Values.multus.f1Interface.gateway }}
+                ,"gateway": "{{ .Values.multus.f1Interface.gateway }}"
                 {{- end }}
           }
           {{- if .Values.multus.ruInterface.create }}
           ,{
-                 "name": "{{ .Chart.Name }}-ru",
-                 "interface": "ru"
+                 "name": "{{ .Chart.Name }}-{{ .Values.multus.ruInterface.name }}",
+                 "interface": "{{ .Values.multus.ruInterface.name }}"
           }
           {{- end }}
           ]
@@ -41,23 +44,39 @@ spec:
       imagePullSecrets:
         {{ toYaml .Values.imagePullSecrets | indent 8 }}
     {{- end }}
+      initContainers:
+        - name: init
+          image: docker.io/oaisoftwarealliance/oai-tcpdump-init:alpine-3.20
+          imagePullPolicy: IfNotPresent
+          command:
+            - /bin/sh
+            - -c
+            - until ncat -zv {{ .Values.config.cuHost }} 38472 --sctp ; do echo waiting for cu or cucp to start; sleep 1; done
+          resources:
+            requests:
+              memory: 50Mi
+              cpu: 1m
+            limits:
+              memory: 50Mi
+              cpu: 1m
       containers:
       - name: gnbdu
+        securityContext: 
+          privileged: true
         image: "{{ .Values.nfimage.repository }}:{{ .Values.nfimage.version }}"
         volumeMounts:
           - mountPath: /opt/oai-gnb/etc
             name: configuration
-        {{- if .Values.resources.define}}
+          - mountPath: /dev/hugepages
+            name: hugepages
         resources:
           requests:
-            memory: {{ .Values.resources.requests.nf.memory | quote }}
-            cpu: {{ .Values.resources.requests.nf.cpu | quote }}
+            intel.com/intel_sriov_dpdk: 1
+            hugepages-1Gi: 16Gi
           limits:
-            memory: {{ .Values.resources.limits.nf.memory | quote }}
-            cpu: {{ .Values.resources.limits.nf.cpu | quote }}
-        {{- end}}
-        securityContext:
-           privileged: true
+            intel.com/intel_sriov_dpdk: 1
+            hugepages-1Gi: 16Gi
+            memory: 16G
         ports:
         - containerPort: 38472
           name: f1c
@@ -110,17 +129,17 @@ spec:
             cpu: {{ .Values.resources.limits.tcpdump.cpu | quote }}
         {{- end}}
         securityContext:
-           privileged: true
            capabilities:
               add:
                - NET_ADMIN
+               - NET_RAW
               drop:
                - ALL
         {{- if .Values.start.tcpdump}}
         command:
           - /bin/sh
           - -c
-          - /usr/sbin/tcpdump -i any -w /tmp/pcap/{{ .Chart.Name }}_`date +%Y-%m-%d_%H_%M-%S-%Z`.pcap
+          - /usr/bin/tcpdump -i any -w /tmp/pcap/{{ .Chart.Name }}_`date +%Y-%m-%d_%H_%M-%S-%Z`.pcap
         {{- else}}
         command:
           - /bin/sleep
@@ -131,10 +150,9 @@ spec:
       - configMap:
           name: {{ .Chart.Name }}-configmap
         name: configuration
-      - hostPath:
-          path: /dev
-          type: Directory
-        name: dev
+      - emptyDir:
+          medium: HugePages
+        name: hugepages
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler

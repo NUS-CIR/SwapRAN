@@ -25,7 +25,7 @@ data:
           tracking_area_code  = {{ .Values.config.tac}};
           plmn_list = ({ mcc = {{ .Values.config.mcc}}; mnc = {{ .Values.config.mnc}}; mnc_length = 2; snssaiList = ({ sst = {{ .Values.config.sst}} }) });
 
-          nr_cellid = 12345678L;
+          nr_cellid = 1L;
 
           tr_s_preference = "f1";
 
