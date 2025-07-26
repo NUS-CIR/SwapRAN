@@ -2,8 +2,8 @@
 
 set -x
 
-minikube ssh -- docker pull khooi8913/f1ap_proxy:swapran
-minikube ssh -- docker pull oaisoftwarealliance/oai-gnb:2024.w40
-minikube ssh -- docker pull oaisoftwarealliance/oai-gnb:2024.w41
-minikube ssh -- docker pull oaisoftwarealliance/oai-gnb:2024.w42
-minikube ssh -- docker pull oaisoftwarealliance/oai-gnb:2024.w43
+sudo ctr image pull docker.io/khooi8913/f1ap_proxy:swapran
+sudo ctr image pull docker.io/oaisoftwarealliance/oai-gnb:2025.w29
+sudo ctr image pull docker.io/oaisoftwarealliance/oai-gnb:2025.w30
+sudo ctr image pull docker.io/oaisoftwarealliance/oai-gnb-fhi72:2025.w29
+sudo ctr image pull docker.io/oaisoftwarealliance/oai-gnb-fhi72:2025.w30
