@@ -162,14 +162,18 @@ def handle_DU_connection(du_obj: DUConnectionObject):
     print(f"Started DU Handler for {du_obj.du_ip}:{du_obj.du_port}")
     while True:
         fromaddr, flags, data, _notif = du_obj.du_socket.sctp_recv(8192)
-        # TODO: Handle SCTP shutdown properly
-        data_type = get_message_type(data)
-        print(f"[DU Handler] Received {data_type} from DU {du_obj.du_ip}:{du_obj.du_port}")
-        if data_type == "F1SetupRequest":
-            du_obj.f1_setup_req_msg = data
-            du_obj.f1_setup_state = "F1SetupRequest"
+        if fromaddr:
+            data_type = get_message_type(data)
+            print(f"[DU Handler] Received {data_type} from DU {du_obj.du_ip}:{du_obj.du_port}")
+            if data_type == "F1SetupRequest":
+                du_obj.f1_setup_req_msg = data
+                du_obj.f1_setup_state = "F1SetupRequest"
+            else:
+                q.put((data, du_obj))
         else:
-            q.put((data, du_obj))
+            print(f"SCTP connection closed!")
+            du_obj.du_socket.close()
+            break
 
 def start_f1ap_proxy(proxy_ip, proxy_port, is_debug):
     global du_obj
@@ -182,13 +186,11 @@ def start_f1ap_proxy(proxy_ip, proxy_port, is_debug):
     f1ap_proxy_socket.listen(1)
 
     print(f"[F1AP proxy] DU handler listening on [SCTP] {proxy_ip}:{proxy_port}")
-    du_socket, addr = f1ap_proxy_socket.accept()
-    du_obj = DUConnectionObject(du_socket, addr[0], addr[1])
-    du_handler = threading.Thread(target=handle_DU_connection, args=(du_obj,))
-    du_handler.start()
-
-    time.sleep(1)
-
+    while True:
+        du_socket, addr = f1ap_proxy_socket.accept()
+        du_obj = DUConnectionObject(du_socket, addr[0], addr[1])
+        du_handler = threading.Thread(target=handle_DU_connection, args=(du_obj,))
+        du_handler.start()
     # du_handler.join()
     # message_handler.join()
 
