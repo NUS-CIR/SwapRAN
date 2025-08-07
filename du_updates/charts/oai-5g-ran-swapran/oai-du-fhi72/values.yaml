@@ -5,7 +5,7 @@ kubernetesDistribution: Vanilla  #Vanilla for community kubernetes distribution 
 nfimage:   # image name either locally present or in a public/private repository
   # repository: docker.io/oaisoftwarealliance/oai-gnb-fhi72           ## dockerhub oaisoftwarealliance/oai-gnb
   repository: docker.io/khooi8913/oai-gnb-fhi72           ## dockerhub oaisoftwarealliance/oai-gnb
-  version: 2025.w14 # image tag or develop
+  version: 2025.w29 # image tag or develop
   # pullPolicy: IfNotPresent or Never or Always
   pullPolicy: IfNotPresent
 
