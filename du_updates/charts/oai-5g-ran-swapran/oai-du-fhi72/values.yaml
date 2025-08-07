@@ -64,14 +64,13 @@ config:
   mnc: "01"    # check the information with AMF, SMF, UPF
   tac: "1"     # check the information with AMF
   sst: "1"  #currently only 4 standard values are allowed 1,2,3,4
-  usrp: rfsim   #allowed values rfsim, b2xx, n3xx or x3xx
   f1IfName: "eth0"   #if multus.f1Interface.create is true then use f1
   cuHost: "oai-cu" ## Ip-address or hostname
   f1cuPort: "2153"   #2153 if using same interface for f1 and n3 else standard port 2152 should be use if f1 and n3 interface are different
   f1duPort: "2153"   #2153 if using same interface for f1 and n3 else standard port 2152 should be use if f1 and n3 interface are different
 
 vf:
-  pciAddress: "0000:70:09.0"
+  pciAddress: "0000:70:01.0"
 
 ## Debugging section
 podSecurityContext:
