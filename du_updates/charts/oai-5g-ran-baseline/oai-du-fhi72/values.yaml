@@ -55,12 +55,11 @@ multus:
 config:
   timeZone: "Europe/Paris"
   useAdditionalOptions: "--sa --thread-pool 16,17,18,19,20,21,22,23"
-  duName: "oai-du-rfsim"
+  duName: "oai-du-fhi72"
   mcc: "001"   # check the information with AMF, SMF, UPF
   mnc: "01"    # check the information with AMF, SMF, UPF
   tac: "1"     # check the information with AMF
   sst: "1"  #currently only 4 standard values are allowed 1,2,3,4
-  usrp: rfsim   #allowed values rfsim, b2xx, n3xx or x3xx
   f1IfName: "eth0"   #if multus.f1Interface.create is true then use f1
   cuHost: "oai-cu" ## Ip-address or hostname
   f1cuPort: "2153"   #2153 if using same interface for f1 and n3 else standard port 2152 should be use if f1 and n3 interface are different
