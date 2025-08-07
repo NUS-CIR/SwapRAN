@@ -44,20 +44,20 @@ data:
 
       #  downlinkConfigCommon
           #frequencyInfoDL
-            absoluteFrequencySSB                                          = 627456;
+            absoluteFrequencySSB                                          = 623328;
             dl_frequencyBand                                                 = 78;
             # this is 3600 MHz
-            dl_absoluteFrequencyPointA                                       = 626760;
+            dl_absoluteFrequencyPointA                                       = 620058;
             #scs-SpecificCarrierList
               dl_offstToCarrier                                              = 0;
       # subcarrierSpacing
       # 0=kHz15, 1=kHz30, 2=kHz60, 3=kHz120  
               dl_subcarrierSpacing                                           = 1;
-              dl_carrierBandwidth                                            = 106;
+              dl_carrierBandwidth                                            = 273;
            #initialDownlinkBWP
             #genericParameters
               # this is RBstart=27,L=48 (275*(L-1))+RBstart
-              initialDLBWPlocationAndBandwidth                               = 28875; # 6366 12925 12956 28875 12952
+              initialDLBWPlocationAndBandwidth                               = 1099; # 6366 12925 12956 28875 12952
       # subcarrierSpacing
       # 0=kHz15, 1=kHz30, 2=kHz60, 3=kHz120  
               initialDLBWPsubcarrierSpacing                                           = 1;
@@ -73,11 +73,11 @@ data:
       # subcarrierSpacing
       # 0=kHz15, 1=kHz30, 2=kHz60, 3=kHz120  
             ul_subcarrierSpacing                                           = 1;
-            ul_carrierBandwidth                                            = 106;
+            ul_carrierBandwidth                                            = 273;
             pMax                                                          = 23;
            #initialUplinkBWP
             #genericParameters
-              initialULBWPlocationAndBandwidth                            = 28875;
+              initialULBWPlocationAndBandwidth                            = 1099;
       # subcarrierSpacing
       # 0=kHz15, 1=kHz30, 2=kHz60, 3=kHz120  
               initialULBWPsubcarrierSpacing                                           = 1;
@@ -89,7 +89,7 @@ data:
                 prach_msg1_FDM                                            = 0;
                 prach_msg1_FrequencyStart                                 = 0;
                 zeroCorrelationZoneConfig                                 = 0;
-                preambleReceivedTargetPower                               = -150;
+                preambleReceivedTargetPower                               = -104;
       #preamblTransMax (0...10) = (3,4,5,6,7,8,10,20,50,100,200)
                 preambleTransMax                                          = 0;
       #powerRampingStep
@@ -119,7 +119,7 @@ data:
               restrictedSetConfig                                         = 0,
 
               msg3_DeltaPreamble                                          = 3;
-              p0_NominalWithGrant                                         = -96;
+              p0_NominalWithGrant                                         =-96;
 
       # pucch-ConfigCommon setup :
       # pucchGroupHopping
@@ -154,26 +154,26 @@ data:
             # 0=ms0p5, 1=ms0p625, 2=ms1, 3=ms1p25, 4=ms2, 5=ms2p5, 6=ms5, 7=ms10
             dl_UL_TransmissionPeriodicity                                 = 5;
             nrofDownlinkSlots                                             = 3;
-            nrofDownlinkSymbols                                           = 10;
+            nrofDownlinkSymbols                                           = 6;
             nrofUplinkSlots                                               = 1;
-            nrofUplinkSymbols                                             = 2;
+            nrofUplinkSymbols                                             = 4;
 
-            ssPBCH_BlockPower                                             = -15;
+            ssPBCH_BlockPower                                             = 0;
            }
 
         );
 
         # ------- TIMER definitions
-          TIMERS :
-          {
-              t300                   = 200;
-              t301                   = 300;
-              t310                   = 50;
-              n310                   = 2;
-              t311                   = 3000;
-              n311                   = 2;
-              t319                   = 200; 
-          };
+        TIMERS :
+        {
+            t300                   = 200;
+            t301                   = 300;
+            t310                   = 50;
+            n310                   = 2;
+            t311                   = 3000;
+            n311                   = 2;
+            t319                   = 200; 
+        };
 
         # ------- SCTP definitions
           SCTP :
@@ -197,12 +197,12 @@ data:
           local_n_portd   = {{ .Values.config.f1duPort}};
           remote_n_portc  = 501;
           remote_n_portd  = {{ .Values.config.f1cuPort}};
-          pusch_TargetSNRx10          = 180;
-          pucch_TargetSNRx10          = 220;
-          dl_bler_target_upper        = .35;
-          dl_bler_target_lower        = .30;
-          ul_bler_target_upper        = .35;
-          ul_bler_target_lower        = .15;
+          pusch_TargetSNRx10          = 200;
+          pucch_TargetSNRx10          = 200;
+          #dl_bler_target_upper        = .35;
+          #dl_bler_target_lower        = .30;
+          #ul_bler_target_upper        = .35;
+          #ul_bler_target_lower        = .15;
           pusch_FailureThres          = 1000;
           ul_max_mcs                  = 28;
         }
@@ -212,11 +212,11 @@ data:
       {
         num_cc = 1;
         tr_n_preference = "local_mac";
-        prach_dtx_threshold = 100;
+        prach_dtx_threshold = 130;
         pucch0_dtx_threshold = 80;
         pusch_dtx_threshold = 10;
-        max_ldpc_iterations = 20;
-        tx_amp_backoff_dB = 12; # needs to match O-RU configuration
+        max_ldpc_iterations = 15;
+        tx_amp_backoff_dB = 20; # needs to match O-RU configuration
         L1_rx_thread_core = 8;
         L1_tx_thread_core = 10;
         phase_compensation = 0; # needs to match O-RU configuration
@@ -238,7 +238,7 @@ data:
         ru_thread_core = 9;
         sl_ahead       = 10;
         tr_preference  = "raw_if4p5"; # important: activate FHI7.2
-        do_precoding   = 0; # needs to match O-RU configuration
+        do_precoding   = 1; # needs to match O-RU configuration
       }
       );  
 
@@ -256,16 +256,20 @@ data:
         system_core = 0;
         io_core = 1;
         worker_cores = (2);
-        ru_addr = ("70:b3:d5:e1:5d:91");
-        mtu = 9600;
+        ru_addr = ("e8:c7:4f:25:80:5b");
+        mtu = 9600; # note: 1500 works as well, with both E and F releases
         fh_config = ({
-          T1a_cp_dl = (419, 470);
-          T1a_cp_ul = (0, 100);
-          T1a_up = (294, 345);
-          Ta4 = (0, 200);
+          T1a_cp_dl = (85, 229); # 85 229
+          T1a_cp_ul = (85, 229); # 85 229
+          T1a_up = (100, 196); # 100 196
+          Ta4 = (110, 180); # 110 180
           ru_config = {
-            iq_width = 9;
-            iq_width_prach = 9;
+          iq_width = 9;
+          iq_width_prach = 9;
+          };
+          prach_config = {
+            eAxC_offset = 4
+            kbar = 0;
           };
         });
       };

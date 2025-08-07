@@ -56,7 +56,7 @@ multus:
 config:
   timeZone: "Europe/Paris"
   useAdditionalOptions: "--sa --thread-pool 16,17,18,19,20,21,22,23"
-  duName: "oai-du-rfsim-1"
+  duName: "oai-du-fhi72-1"
   duId: 0xe000
   nr_cellid: 11111111L
   phyCellId: 0
@@ -71,7 +71,7 @@ config:
   f1duPort: "2153"   #2153 if using same interface for f1 and n3 else standard port 2152 should be use if f1 and n3 interface are different
 
 vf:
-  pciAddress: "0000:70:01.0"
+  pciAddress: "0000:70:09.0"
 
 ## Debugging section
 podSecurityContext:
