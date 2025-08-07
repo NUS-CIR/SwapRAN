@@ -46,11 +46,34 @@ spec:
           command: ["/bin/bash", "-c"]
           args: 
           - ip addr show eth0 | grep 'inet ' | awk '{print $2}' | cut -d'/' -f1 > /tmp/ip.txt && sleep 5 && python3 f1ap_proxy.py --proxy-ip `cat /tmp/ip.txt` 2>&1
+          {{- if .Values.includeTcpDumpContainer }}
+        - name: tcpdump
+          image: "{{ .Values.tcpdumpimage.repository }}:{{ .Values.tcpdumpimage.version }}"
+          imagePullPolicy: {{ .Values.tcpdumpimage.pullPolicy }}
+          securityContext:
+            privileged: true
+            capabilities:
+                add:
+                - NET_ADMIN
+                drop:
+                - ALL
+          {{- if .Values.start.tcpdump}}
+          command:
+            - /bin/sh
+            - -c
+            - /usr/bin/tcpdump sctp -nnv
+          {{- else}}
+          command:
+            - /bin/sleep
+            - infinity
+          {{- end}}
+          {{- end }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.nodeSelector }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -4,7 +4,7 @@ kubernetesType: Vanilla  #Vanilla for community kubernetes distribution else Ope
 ## To know more about them follow this tutorial https://gitlab.eurecom.fr/oai/cn5g/oai-cn5g-fed/-/tree/master/openshift
 nfimage:   # image name either locally present or in a public/private repository
   repository: docker.io/oaisoftwarealliance/oai-gnb  
-  version: 2025.w29 # image tag or develop
+  version: 2025.w31 # image tag or develop
   pullPolicy: IfNotPresent
 
 ## good to use when pulling images from docker-hub mention 
