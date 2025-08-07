@@ -16,3 +16,7 @@ For example:
 ```
 sudo LD_PRELOAD=/path/to/libswapRAN.so ./nr-softmodem -O ~/gnb.conf --sa --thread-pool 16,17,18,19,20,21,22,23
 ```
+
+## Demo Setup
+
+Make sure to copy `/path/to/libswapRAN.so` and put it under `/tmp`.
