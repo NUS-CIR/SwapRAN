@@ -8,7 +8,7 @@ Links:
 [[Demo Abstract](https://drive.google.com/file/d/1-GlCBu6GUs9AtEYsu6bA4c-nRhzx1Nbp/view?usp=sharing)],
 [[Demo Poster](https://drive.google.com/file/d/11d4GPHAluCGjMNcUtUmaWE41aYs4aNXv/view?usp=drive_link)].
 
-> Note: An earlier version of this repository was presented in the OAI Workshop 2025 (see branch `oai-summer-workshop`).
+> Note: An earlier version of SwapRAN's demo was presented in the OAI Workshop 2025 (see branch `oai-summer-workshop`).
 
 ## Overview
 
@@ -21,8 +21,6 @@ For details, please refer to the README under [`du_updates/`](du_updates/README.
 As for CU updates, we decouple the stateful connection between the CU and DU, and using standard messages, i.e., F1 Resets, to gradually migrate DUs to use the new CU during updates.
 For details, please refer to the README under [`cu_updates/`](cu_updates/README.md).
 > Note: Pay attention to the K8S lifecycle hooks, the use of the F1AP proxy, and also the CU configurations.
-
-For the testbed setup used, please refer to [TESTBED_SETUP.md](TESTBED_SETUP.md).
 
 ## Citation
 
