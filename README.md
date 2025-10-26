@@ -8,6 +8,8 @@ Links:
 [[Demo Abstract](https://drive.google.com/file/d/1-GlCBu6GUs9AtEYsu6bA4c-nRhzx1Nbp/view?usp=sharing)],
 [[Demo Poster](https://drive.google.com/file/d/11d4GPHAluCGjMNcUtUmaWE41aYs4aNXv/view?usp=drive_link)].
 
+> Note: An earlier version of this repository was presented in the OAI Workshop 2025 (see branch `oai-summer-workshop`).
+
 ## Overview
 
 SwapRAN proposes techniques that enables the CU/DU update process to be performed seamlessly by reducing the downtimes due to updates, substantially.
