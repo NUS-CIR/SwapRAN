@@ -23,7 +23,7 @@ In this example, we have validated SwapRAN with K3s.
 Additionally, we assume an O-RAN 7.2 setup.
 In our setup, we use an Intel E810-XXVDA4TGG1 4x25GbE NIC, and we use a LLS-C1 setup between the DU and RU.
 
-### Getting the Conainer Images
+### Getting the Container Images
 
 First, you need to get the OAI DU and CU container images.
 For SwapRAN, as we introduced optimizations to allow the DU to start faster, we need use an optimized DU image.
@@ -133,7 +133,9 @@ make baseline-update-w30
 Observe how the update process affects the UE's traffic. 
 Based on our evaluations, the downtime should be at least 25 seconds.
 
-Once you are down, cleanup the RAN.
+Once you are at `w30`, you can also try updating to later versions, e.g., `w31` and observe similar downtimes.
+
+Finally, once you are down, cleanup the RAN.
 ```
 make cleanup
 ```
@@ -158,6 +160,13 @@ Observe how the update process affects the UE's traffic.
 Based on the SwapRAN paper's evaluation with the commercial DU, the downtime using SwapRAN is expected to be around 1-2 seconds.
 In our setup, we have been observing downtimes to be around 3-5 seconds, which can be attributed to the known less optimal RF performance with our configuration which can be improved with further tuning.
 
+Once you are at `w30`, you can also try updating to later versions, e.g., `w31` and observe similar downtimes.
+
+Finally, once you are down, cleanup the RAN.
+```
+make cleanup
+```
+
 ## Demo Video Links
 
 A recorded demo of SwapRAN using OAI can be found here:
@@ -166,9 +175,9 @@ A recorded demo of SwapRAN using OAI can be found here:
 An earlier demo of SwapRAN at the OAI Summer Workshop 2025 can be found here:
 - [OAI Summer Workshop 2025](https://youtu.be/EKVyJjPpaG8).
 
-## Limitations
+## Additional Notes
 
-### DU and PCI IDs
+### Using different DU and PCI IDs
 In SwapRAN, as we run two DU instances concurrently during the update process, we will need to make sure that both DU instances do not share the same DU ID and physical cell ID (PCI), as this will cause the CU to reject the F1 setup request from the new DU.
 
 Therefore, in practice, we will need to reserve an additional "sister" DU ID and PCI for SwapRAN to work.
