@@ -68,7 +68,7 @@ config:
   useAdditionalOptions: "--sa --log_config.global_log_options level,nocolor,time"
   # If mounting the configuration file then below parameters are not used
   cuName: "oai-cu"
-  gnbId: "0xe0" 
+  gnbId: "0xe1" 
   mcc: "001"   # check the information with AMF, SMF, UPF
   mnc: "01"    # check the information with AMF, SMF, UPF
   tac: "1"     # check the information with AMF
