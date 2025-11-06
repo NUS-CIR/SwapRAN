@@ -98,10 +98,10 @@ make cleanup
 ## Demo Video Links
 
 A recorded demo of SwapRAN using OAI can be found here:
-- Coming soon.
+- [MobiCom25](https://youtu.be/TBRwtSPgjFE).
 
 An earlier demo of SwapRAN at the OAI Summer Workshop 2025 can be found here:
-- [OAI Summer Workshop 2025](https://youtu.be/7xD2kYkpmOM) 
+- [OAI Summer Workshop 2025](https://youtu.be/7xD2kYkpmOM).
 
 ## Additional Notes
 
